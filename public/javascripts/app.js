@@ -33,8 +33,7 @@
         .when( "/phones", { 
           templateUrl: "phones.html",
           controller: "phoneController"
-        })
-        .otherwise({ redirectTo: "/" });
+        });
     }])
     .run(function($rootScope) {
       $rootScope.controllerName = "homeController";
