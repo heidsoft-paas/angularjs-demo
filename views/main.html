@@ -8,9 +8,9 @@
   <body>
     <!-- The view -->
     <ul class="nav nav-tabs">
-      <li class="active"><a href="/">Home</a></li>
-      <li><a href="/news">News</a></li>
-      <li><a href="/phones">Phones</a></li>
+      <li ng-class="{ active: controllerName == 'homeController' }"><a href="/">Home</a></li>
+      <li ng-class="{ active: controllerName == 'newsController' }"><a href="/news">News</a></li>
+      <li ng-class="{ active: controllerName == 'phoneController' }"><a href="/phones">Phones</a></li>
     </ul>
     <div ng-view>
     </div>
