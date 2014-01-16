@@ -1,7 +1,10 @@
 (function() {
   angular
     .module( "mwpControllers", [])
-    .controller( "homeController", function($scope, $http) {
+    .controller( "homeController", function() {
+
+    })
+    .controller( "helloWorldController", function($scope, $http) {
       $scope.appUptime = 0;
       $scope.ajaxLoading = false;
       $scope.getUptime = function () {
@@ -13,9 +16,6 @@
         });
       };
     })
-    .controller( "newsController", function() {
-
-    })
     .controller( "phoneController", function() {});
   angular
     .module("mwp", [ "ngRoute", "mwpControllers" ])
@@ -26,9 +26,9 @@
           templateUrl: "home.html",
           controller: "homeController"
         })
-        .when( "/news", { 
-          templateUrl: "news.html",
-          controller: "newsController"
+        .when( "/hello-world", { 
+          templateUrl: "helloworld.html",
+          controller: "helloWorldController"
         })
         .when( "/phones", { 
           templateUrl: "phones.html",

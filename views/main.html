@@ -9,7 +9,7 @@
     <!-- The view -->
     <ul class="nav nav-tabs">
       <li ng-class="{ active: controllerName == 'homeController' }"><a href="/">Home</a></li>
-      <li ng-class="{ active: controllerName == 'newsController' }"><a href="/news">News</a></li>
+      <li ng-class="{ active: controllerName == 'helloWorldController' }"><a href="/hello-world">Hello World</a></li>
       <li ng-class="{ active: controllerName == 'phoneController' }"><a href="/phones">Phones</a></li>
     </ul>
     <div ng-view>
@@ -17,24 +17,25 @@
 
     <!-- Template definitions -->
     <script type="text/ng-template" id="home.html">
+      <h3 class="text-primary">Welcome to Mobile World Portal</h3>
+      This website is to demonstrate for how to use AngularJS to build Single-page Application. Explore tabs and source code to see deeper implementation
+    </script>
+
+    <script type="text/ng-template" id="helloworld.html">
       <div class="row">
         <div class="col-xs-5">
           <h4 class="text-danger">Two-way binding between Model and View</h4>
           <blockquote>
-            <input type="text" ng-model="anytext" class="form-control" id="txtAnything" placeholder="Enter anything" />
-            <br />You are typing: <span ng-bind="anytext" class="text-muted"></span>
+            <input type="text" ng-model="anytext" class="form-control" id="txtAnything" placeholder="Enter your phone name" />
+            <br />You are looking on name: <span ng-bind="anytext" class="text-muted"></span>
           </blockquote>
           <h4 class="text-danger">Communication between View and Controller</h4>
           <blockquote>
-            <em><a ng-class="{ 'text-muted': ajaxLoading }" ng-disabled="ajaxLoading" href="javascript:void(0);" ng-click="getUptime()">Show</a> application uptime (in seconds):</em> 
+            <em><a ng-class="{ 'text-muted': ajaxLoading }" ng-disabled="ajaxLoading" href="javascript:void(0);" ng-click="getUptime()">See</a> total phones in our store:</em> 
             <span ng-bind="appUptime" class="label label-info"></span> <img src="images/ajax-loading.gif" ng-show="ajaxLoading" />
           </blockquote>
         </div>
       </div>
-    </script>
-
-    <script type="text/ng-template" id="news.html">
-      Mobile news
     </script>
 
     <script type="text/ng-template" id="phones.html">
