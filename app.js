@@ -32,8 +32,12 @@ app.get("/", function(req, res) {
   res.render("main.html");
 });
 app.namespace("/api", function() {
-  app.post("/", function(req, res) {
-    res.send("GET forum " + req.params.id);
+  app.get("/uptime", function(req, res) {
+    // Simulate slow network
+    setTimeout(function() {
+      res.contentType("text/plain");
+      res.send(process.uptime().toString());
+    }, 2000);
   });
 });
 

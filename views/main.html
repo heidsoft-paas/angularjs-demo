@@ -17,7 +17,20 @@
 
     <!-- Template definitions -->
     <script type="text/ng-template" id="home.html">
-      <h1 class="text-center text-primary">Welcome to Mobile World Portal</h1>
+      <div class="row">
+        <div class="col-xs-5">
+          <h4 class="text-danger">Two-way binding between Model and View</h4>
+          <blockquote>
+            <input type="text" ng-model="anytext" class="form-control" id="txtAnything" placeholder="Enter anything" />
+            <br />You are typing: <span ng-bind="anytext" class="text-muted"></span>
+          </blockquote>
+          <h4 class="text-danger">Communication between View and Controller</h4>
+          <blockquote>
+            <em><a ng-class="{ 'text-muted': ajaxLoading }" ng-disabled="ajaxLoading" href="javascript:void(0);" ng-click="getUptime()">Show</a> application uptime (in seconds):</em> 
+            <span ng-bind="appUptime" class="label label-info"></span> <img src="images/ajax-loading.gif" ng-show="ajaxLoading" />
+          </blockquote>
+        </div>
+      </div>
     </script>
 
     <script type="text/ng-template" id="news.html">

@@ -1,8 +1,21 @@
 (function() {
   angular
     .module( "mwpControllers", [])
-    .controller( "homeController", function() {})
-    .controller( "newsController", function() {})
+    .controller( "homeController", function($scope, $http) {
+      $scope.appUptime = 0;
+      $scope.ajaxLoading = false;
+      $scope.getUptime = function () {
+        $scope.ajaxLoading = true;
+        var promise = $http.get("api/uptime");
+        promise["finally"](function() { $scope.ajaxLoading = false; });
+        promise.success(function(data) {
+          $scope.appUptime = Math.floor(data);
+        });
+      };
+    })
+    .controller( "newsController", function() {
+
+    })
     .controller( "phoneController", function() {});
   angular
     .module("mwp", [ "ngRoute", "mwpControllers" ])
