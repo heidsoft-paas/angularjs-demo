@@ -10,7 +10,7 @@
     <ul class="nav nav-tabs">
       <li ng-class="{ active: controllerName == 'homeController' }"><a href="/">Home</a></li>
       <li ng-class="{ active: controllerName == 'helloWorldController' }"><a href="/hello-world">Hello World</a></li>
-      <li ng-class="{ active: controllerName == 'phoneController' }"><a href="/phones">Phones</a></li>
+      <li ng-class="{ active: controllerName == 'phoneController' }"><a href="/phones">Phone list</a></li>
     </ul>
     <div ng-view>
     </div>
@@ -18,22 +18,57 @@
     <!-- Template definitions -->
     <script type="text/ng-template" id="home.html">
       <h3 class="text-primary">Welcome to Mobile World Portal</h3>
-      This website is to demonstrate for how to use AngularJS to build Single-page Application. Explore tabs and source code to see deeper implementation
+      This website is to demonstrate for how to use AngularJS to build Single-page Application. Explore tabs and source code to see detail implementation
     </script>
 
     <script type="text/ng-template" id="helloworld.html">
       <div class="row">
         <div class="col-xs-5">
-          <h4 class="text-danger">Two-way binding between Model and View</h4>
+          <br />
           <blockquote>
-            <input type="text" ng-model="anytext" class="form-control" id="txtAnything" placeholder="Enter your phone name" />
-            <br />You are looking on name: <span ng-bind="anytext" class="text-muted"></span>
+            The below form will demonstrate features:
+            <ul>
+              <li>Two-way binding between Model and View</li>
+              <li>Communication between View and Controller</li>
+            </ul>
           </blockquote>
-          <h4 class="text-danger">Communication between View and Controller</h4>
-          <blockquote>
-            <em><a ng-class="{ 'text-muted': ajaxLoading }" ng-disabled="ajaxLoading" href="javascript:void(0);" ng-click="getUptime()">See</a> total phones in our store:</em> 
-            <span ng-bind="appUptime" class="label label-info"></span> <img src="images/ajax-loading.gif" ng-show="ajaxLoading" />
-          </blockquote>
+          <h3 class="text-primary">Register a Portal account</h3>
+          <form class="form-horizontal" role="form">
+            <div class="form-group" ng-show="accountRegistrationError">
+              <div class="text-danger col-sm-12">
+                  Please make sure you provided necessary data
+              </div>
+            </div>
+            <div class="form-group" ng-show="accountRegistrationSuccess">
+              <div class="text-success col-sm-12">
+                  Successful ! Check your email ...
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="inputName" class="col-sm-4 control-label">Name</label>
+              <div class="col-sm-8">
+                <input type="text" id="inputName" ng-model="accountName" class="form-control" placeholder="Enter your name" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-4 control-label">Your email</label>
+              <div class="col-sm-8">
+                <span ng-bind="accountName" class="text-muted"></span>@kms-technology.com
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-4 control-label">Your account key</label>
+              <div class="col-sm-8">
+                <span ng-bind="accountKey" class="text-success"></span>
+                <a href="javascript:void(0);" ng-click="generateAccountKey()" ng-class="{ 'text-muted': inGeneratingAccountKey || accountKey }">generate <span ng-show="accountKey">(again)</span></a> <img src="images/ajax-loading.gif" ng-show="inGeneratingAccountKey" />
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-6 col-sm-12">
+                <button type="button" ng-click="registerNewAccount()" class="btn btn-default">Register me</button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </script>
@@ -47,6 +82,7 @@
     <script src="/javascripts/bootstrap3.0.min.js" type="text/javascript"></script>
     <script src="/javascripts/angular1.2.min.js" type="text/javascript"></script>
     <script src="/javascripts/angular-route1.2.min.js" type="text/javascript"></script>
+    <script src="/javascripts/faker.js" type="text/javascript"></script>
     <script src="/javascripts/app.js" type="text/javascript"></script>
   </body>
 </html>

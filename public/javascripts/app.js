@@ -1,22 +1,50 @@
 (function() {
   angular
     .module( "mwpControllers", [])
-    .controller( "homeController", function() {
-
-    })
-    .controller( "helloWorldController", function($scope, $http) {
-      $scope.appUptime = 0;
-      $scope.ajaxLoading = false;
-      $scope.getUptime = function () {
-        $scope.ajaxLoading = true;
-        var promise = $http.get("api/uptime");
-        promise["finally"](function() { $scope.ajaxLoading = false; });
-        promise.success(function(data) {
-          $scope.appUptime = Math.floor(data);
-        });
+    .controller( "homeController", function() {})
+    .controller( "helloWorldController", function($scope, $timeout) {
+      $scope.inGeneratingAccountKey = false;
+      $scope.accountRegistrationError = false;
+      $scope.accountRegistrationSuccess = false;
+      $scope.registerNewAccount = function() {
+        if( !$scope.inGeneratingAccountKey ) {
+          $scope.accountRegistrationError = false;
+          $scope.accountRegistrationSuccess = false;
+          if( $scope.accountKey && $scope.accountName ) {
+            $scope.accountRegistrationSuccess = true;
+            $scope.accountKey = null;
+            $scope.accountName = null;
+          }
+          else {
+            $scope.accountRegistrationError = true;
+          }
+        }
+      };
+      $scope.generateAccountKey = function () {
+        if( !$scope.inGeneratingAccountKey ) {
+          $scope.inGeneratingAccountKey = true;
+          $timeout(function() {
+            /* I use Faker (https://github.com/Marak/Faker.js) to generate dummy data */
+            $scope.accountKey = Faker.Lorem.words(1)[0] + Faker.Helpers.randomNumber(10000);
+            $scope.inGeneratingAccountKey = false;
+          }, 1000);
+        }
       };
     })
-    .controller( "phoneController", function() {});
+    .controller( "phoneController", function($scope, $http) {
+      $scope.loadingNews = false;
+      /*
+        For demo purpose, I used Google Feed JSON API to generate json format from rss xml. Check out this link for how to use the tool: https://developers.google.com/feed/v1/jsondevguide#json_reference
+        The url I used to generate news.json file is (try out by copying and pasting to your browser now to see the magic) https://ajax.googleapis.com/ajax/services/feed/load?v=2.0&q=http://feeds.feedburner.com/pocketnow&num=20
+        var promise = $http.get("news.json");
+        promise["finally"](function() { $scope.loadingNews = false; });
+        promise.success(function(data) {
+          $scope.accountAccountKey = Math.floor(data);
+          // var jFeed = $(data);
+          console.log(data.feed.entries.length);
+        });*/
+
+    });
   angular
     .module("mwp", [ "ngRoute", "mwpControllers" ])
     .config([ "$routeProvider", "$locationProvider", function($routeProvider, $locationProvider) {
@@ -34,7 +62,7 @@
           templateUrl: "phones.html",
           controller: "phoneController"
         });
-    }])
+     }])
     .run(function($rootScope) {
       $rootScope.controllerName = "homeController";
       $rootScope.$on("$routeChangeSuccess", function(ev, current) {   
