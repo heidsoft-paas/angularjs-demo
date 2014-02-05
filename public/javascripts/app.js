@@ -2,33 +2,24 @@
   angular
     .module( "mwpControllers", [])
     .controller( "homeController", function() {})
-    .controller( "helloWorldController", function($scope, $timeout) {
-      $scope.inGeneratingAccountKey = false;
+    .controller( "helloWorldController", function($scope) {
       $scope.accountRegistrationError = false;
       $scope.accountRegistrationSuccess = false;
       $scope.registerNewAccount = function() {
-        if( !$scope.inGeneratingAccountKey ) {
-          $scope.accountRegistrationError = false;
-          $scope.accountRegistrationSuccess = false;
-          if( $scope.accountKey && $scope.accountName ) {
-            $scope.accountRegistrationSuccess = true;
-            $scope.accountKey = null;
-            $scope.accountName = null;
-          }
-          else {
-            $scope.accountRegistrationError = true;
-          }
+        $scope.accountRegistrationError = false;
+        $scope.accountRegistrationSuccess = false;
+        if( $scope.accountKey && $scope.accountName ) {
+          $scope.accountRegistrationSuccess = true;
+          $scope.accountKey = null;
+          $scope.accountName = null;
+        }
+        else {
+          $scope.accountRegistrationError = true;
         }
       };
       $scope.generateAccountKey = function () {
-        if( !$scope.inGeneratingAccountKey ) {
-          $scope.inGeneratingAccountKey = true;
-          $timeout(function() {
-            /* I use Faker (https://github.com/Marak/Faker.js) to generate dummy data */
-            $scope.accountKey = Faker.Lorem.words(1)[0] + Faker.Helpers.randomNumber(10000);
-            $scope.inGeneratingAccountKey = false;
-          }, 1000);
-        }
+        /* I use Faker (https://github.com/Marak/Faker.js) to generate dummy data */
+        $scope.accountKey = Faker.Lorem.words(1)[0] + Faker.Helpers.randomNumber(10000);
       };
     })
     .controller( "phoneController", function($scope, $http) {

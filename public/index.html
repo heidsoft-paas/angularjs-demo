@@ -61,7 +61,7 @@
               <label class="col-sm-4 control-label">Your account key</label>
               <div class="col-sm-8">
                 <span ng-bind="accountKey" class="text-success"></span>
-                <a href="javascript:void(0);" ng-click="generateAccountKey()" ng-class="{ 'text-muted': inGeneratingAccountKey || accountKey }">generate <span ng-show="accountKey">(again)</span></a> <img src="images/ajax-loading.gif" ng-show="inGeneratingAccountKey" />
+                <a href="javascript:void(0);" ng-click="generateAccountKey()" ng-class="{ 'text-muted': accountKey }">generate <span ng-show="accountKey">(again)</span></a>
               </div>
             </div>
             <div class="form-group">
