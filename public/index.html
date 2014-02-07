@@ -8,7 +8,7 @@
   </head>
   <body>
     <!-- The view -->
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs" ng-controller="navController">
       <li ng-class="{ active: controllerName == 'homeController' }"><a href="/">Home</a></li>
       <li ng-class="{ active: controllerName == 'helloWorldController' }"><a href="/hello-world">Hello World</a></li>
       <li ng-class="{ active: controllerName == 'phoneController' }"><a href="/phones">Phone list</a></li>

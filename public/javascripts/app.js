@@ -1,6 +1,12 @@
 (function() {
   angular
     .module( "mwpControllers", [])
+    .controller( "navController", function($scope) {
+      $scope.controllerName = "homeController";
+      $scope.$on("$routeChangeSuccess", function(ev, current) {   
+        $scope.controllerName = current.controller;
+      });  
+    })
     .controller( "homeController", function() {})
     .controller( "helloWorldController", function($scope) {
       $scope.accountRegistrationError = false;
@@ -53,11 +59,5 @@
           templateUrl: "phones.html",
           controller: "phoneController"
         });
-     }])
-    .run(function($rootScope) {
-      $rootScope.controllerName = "homeController";
-      $rootScope.$on("$routeChangeSuccess", function(ev, current) {   
-        $rootScope.controllerName = current.controller;
-      });  
-    });
+     }]);
 })();
