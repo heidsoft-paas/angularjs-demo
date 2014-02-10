@@ -1,13 +1,15 @@
+google.load("feeds", "1");
 (function() {
+  /* On jQuery "ready" event of document */
   angular
     .module( "mwpControllers", [])
+    .controller( "homeController", function() {})
     .controller( "navController", function($scope) {
       $scope.controllerName = "homeController";
       $scope.$on("$routeChangeSuccess", function(ev, current) {   
         $scope.controllerName = current.controller;
       });  
     })
-    .controller( "homeController", function() {})
     .controller( "helloWorldController", function($scope) {
       $scope.accountRegistrationError = false;
       $scope.accountRegistrationSuccess = false;
@@ -28,22 +30,78 @@
         $scope.accountKey = Faker.Lorem.words(1)[0] + Faker.Helpers.randomNumber(10000);
       };
     })
-    .controller( "phoneController", function($scope, $http) {
-      $scope.loadingNews = false;
-      /*
-        For demo purpose, I used Google Feed JSON API to generate json format from rss xml. Check out this link for how to use the tool: https://developers.google.com/feed/v1/jsondevguide#json_reference
-        The url I used to generate news.json file is (try out by copying and pasting to your browser now to see the magic) https://ajax.googleapis.com/ajax/services/feed/load?v=2.0&q=http://feeds.feedburner.com/pocketnow&num=20
-        var promise = $http.get("news.json");
-        promise["finally"](function() { $scope.loadingNews = false; });
-        promise.success(function(data) {
-          $scope.accountAccountKey = Math.floor(data);
-          // var jFeed = $(data);
-          console.log(data.feed.entries.length);
-        });*/
+    .controller( "phoneController", function($scope, $timeout, $cookies) {
+      $scope.onLoading = false;
+      $scope.showLoadingSuccessHint = false;
+      $scope.fetchAmount = parseInt($cookies.fetchAmount || 5, 10);
+      $scope.newsItems = [];      
 
+      $scope.getNews = function() {
+        $cookies.fetchAmount = $scope.fetchAmount;
+        $scope.onLoading = true;
+
+        var feed = new google.feeds.Feed( "http://feeds.feedburner.com/Mobilecrunch" );
+        feed.setNumEntries( $scope.fetchAmount );
+        feed.setResultFormat( google.feeds.Feed.JSON_FORMAT );
+        feed.load(function(result) {
+          $timeout(function() {
+            $scope.onLoading = false;
+            if (!result.error) {
+              $scope.newsItems = [];
+              var feedEntries = result.feed.entries; 
+              var maxLength = feedEntries.length;
+              for (var i = 0; i < maxLength; i++) {
+                $scope.newsItems.push(feedEntries[i]);
+              }
+
+              // Notice user that news are loaded success
+              $scope.showLoadingSuccessHint = true;
+              $timeout(function() {
+                $scope.showLoadingSuccessHint = false;
+              }, 2000);
+            }
+          }); 
+        });
+      };
     });
   angular
-    .module("mwp", [ "ngRoute", "mwpControllers" ])
+    .module("mwp", [ 
+        "ngRoute" /* enable routing */, 
+        "ngCookies" /* access to browser cookie */,
+        "mwpControllers" ])
+    .directive("void", function() {
+      return {
+        restrict  : "A",
+        compile   : function(ele) {
+          ele.attr("href", "javascript:void(0);");
+        }
+      };
+    })
+    .directive("openNew", function() {
+      return {
+        restrict  : "A",
+        compile   : function(ele) {
+          ele.attr("target", "news");
+        }
+      };
+    })
+    .directive("share", function() {
+      return {
+        restrict        : "E",
+        template        : 
+          "<div>" +
+            "<a open-new ng-href=\"http://www.facebook.com/sharer.php?u={{url}}\" title=\"Share on Facebook\"><span class=\"glyphicon glyphicon-thumbs-up\"></span></a>" +
+            "&nbsp;<a open-new title=\"Share on LinkedIn\" ng-href=\"http://www.linkedin.com/shareArticle?mini=true&url={{url}}&title={{title}}&summary={{description}}\"><span class=\"glyphicon glyphicon-user\"></span></a>" +
+            "&nbsp;<a open-new title=\"Share on Google Plus\" ng-href=\"https://plus.google.com/share?url={{url}}\"><span class=\"glyphicon glyphicon-plus\"></span></a>" +
+          "</div>",
+        replace         : true,
+        scope           : {
+          url           : "@",
+          title         : "@",
+          description   : "@"
+        }
+      };
+    })
     .config([ "$routeProvider", "$locationProvider", function($routeProvider, $locationProvider) {
       $locationProvider.html5Mode(true);
       $routeProvider
@@ -59,5 +117,6 @@
           templateUrl: "phones.html",
           controller: "phoneController"
         });
-     }]);
+    }]);
+
 })();
