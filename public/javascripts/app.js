@@ -2,7 +2,7 @@ google.load("feeds", "1");
 (function() {
   /* On jQuery "ready" event of document */
   angular
-    .module( "mwpControllers", [])
+    .module( "adaControllers", [])
     .controller( "homeController", function() {})
     .controller( "navController", function($scope) {
       $scope.controllerName = "homeController";
@@ -10,27 +10,30 @@ google.load("feeds", "1");
         $scope.controllerName = current.controller;
       });  
     })
-    .controller( "helloWorldController", function($scope) {
+    .controller( "simpleDemoController", function($scope) {
       $scope.accountRegistrationError = false;
       $scope.accountRegistrationSuccess = false;
       $scope.registerNewAccount = function() {
         $scope.accountRegistrationError = false;
         $scope.accountRegistrationSuccess = false;
-        if( $scope.accountKey && $scope.accountName ) {
+        if( $scope.accountName && $scope.captchaText && $scope.captchaText == $scope.generatedCaptchaText ) {
           $scope.accountRegistrationSuccess = true;
-          $scope.accountKey = null;
+          $scope.generateCaptchaText();
+          $scope.captchaText = null;
           $scope.accountName = null;
         }
         else {
           $scope.accountRegistrationError = true;
         }
       };
-      $scope.generateAccountKey = function () {
-        /* I use Faker (https://github.com/Marak/Faker.js) to generate dummy data */
-        $scope.accountKey = Faker.Lorem.words(1)[0] + Faker.Helpers.randomNumber(10000);
+      $scope.generateCaptchaText = function () {
+        /* Use Faker (https://github.com/Marak/Faker.js) to generate dummy data */
+        $scope.generatedCaptchaText = Faker.Lorem.words(1)[0] + Faker.Helpers.randomNumber(10000);
       };
+
+      $scope.generateCaptchaText();
     })
-    .controller( "phoneController", function($scope, $timeout, $cookies) {
+    .controller( "advanceDemoController", function($scope, $timeout, $cookies) {
       $scope.onLoading = false;
       $scope.showLoadingSuccessHint = false;
       $scope.fetchAmount = parseInt($cookies.fetchAmount || 5, 10);
@@ -44,6 +47,7 @@ google.load("feeds", "1");
         feed.setNumEntries( $scope.fetchAmount );
         feed.setResultFormat( google.feeds.Feed.JSON_FORMAT );
         feed.load(function(result) {
+          /* This callback changes the model ($scope) but it's executed outside of AngularJS control, so we use $timeout service to tell AngularJS re-bind the template */
           $timeout(function() {
             $scope.onLoading = false;
             if (!result.error) {
@@ -65,10 +69,10 @@ google.load("feeds", "1");
       };
     });
   angular
-    .module("mwp", [ 
+    .module("ada", [ 
         "ngRoute" /* enable routing */, 
         "ngCookies" /* access to browser cookie */,
-        "mwpControllers" ])
+        "adaControllers" ])
     .directive("void", function() {
       return {
         restrict  : "A",
@@ -109,13 +113,13 @@ google.load("feeds", "1");
           templateUrl: "home.html",
           controller: "homeController"
         })
-        .when( "/hello-world", { 
-          templateUrl: "helloworld.html",
-          controller: "helloWorldController"
+        .when( "/simple-demo", { 
+          templateUrl: "simple-demo.html",
+          controller: "simpleDemoController"
         })
-        .when( "/phones", { 
-          templateUrl: "phones.html",
-          controller: "phoneController"
+        .when( "/advance-demo", { 
+          templateUrl: "advance-demo.html",
+          controller: "advanceDemoController"
         });
     }]);
 

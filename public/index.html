@@ -1,81 +1,84 @@
 <!DOCTYPE html>
-<html ng-app="mwp">
+<html ng-app="ada">
   <head>
-    <title>Mobile World Portal</title>
+    <title>AngularJS demo application</title>
     <link href="stylesheets/bootstrap3.0.min.css" rel="stylesheet" type="text/css" />
     <link href="stylesheets/style.css" rel="stylesheet" type="text/css" />
     <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico"/>
   </head>
   <body>
     <!-- The view -->
-    <ul class="nav nav-tabs" ng-controller="navController">
-      <li ng-class="{ active: controllerName == 'homeController' }"><a href="/">Home</a></li>
-      <li ng-class="{ active: controllerName == 'helloWorldController' }"><a href="/hello-world">Hello World</a></li>
-      <li ng-class="{ active: controllerName == 'phoneController' }"><a href="/phones">Phone news</a></li>
-    </ul>
-    <br />
-    <div ng-view>
-    </div>
-
-    <!-- Template definitions -->
-    <script type="text/ng-template" id="home.html">
-      <h3 class="text-primary">Welcome to Mobile World Portal</h3>
-      This website is to demonstrate for how to use AngularJS to build Single-page Application. Explore tabs and source code to see detail implementation
-    </script>
-
-    <script type="text/ng-template" id="helloworld.html">
-      <div class="row">
-        <div class="col-xs-5">
-          <blockquote>
-            The below form will demonstrate features:
-            <ul>
-              <li>Two-way binding between Model and View</li>
-              <li>Communication between View and Controller</li>
-            </ul>
-          </blockquote>
-          <h3 class="text-primary">Register a Portal account</h3>
-          <form class="form-horizontal" role="form">
-            <div class="form-group" ng-show="accountRegistrationError">
-              <div class="text-danger col-sm-12">
-                  Please make sure you provided necessary data
-              </div>
-            </div>
-            <div class="form-group" ng-show="accountRegistrationSuccess">
-              <div class="text-success col-sm-12">
-                  Successful ! Check your new email ...
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="inputName" class="col-sm-4 control-label">Name</label>
-              <div class="col-sm-8">
-                <input type="text" id="inputName" ng-model="accountName" class="form-control" placeholder="Enter your name" />
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-4 control-label">New email</label>
-              <div class="col-sm-8">
-                <span ng-bind="accountName" class="text-muted"></span>@kms-technology.com
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="col-sm-4 control-label">Generated account key</label>
-              <div class="col-sm-8">
-                <span ng-bind="accountKey" class="text-success"></span>
-                <a href="javascript:void(0);" ng-click="generateAccountKey()" ng-class="{ 'text-muted': accountKey }">generate <span ng-show="accountKey">(again)</span></a>
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="col-sm-offset-6 col-sm-12">
-                <button type="button" ng-click="registerNewAccount()" class="btn btn-default">Register me</button>
-              </div>
-            </div>
-          </form>
-        </div>
+    <div class="container" style="width: 800px; margin: 10px 0;">
+      <ul class="nav nav-tabs" ng-controller="navController">
+        <li ng-class="{ active: controllerName == 'homeController' }"><a href="/">Home</a></li>
+        <li ng-class="{ active: controllerName == 'simpleDemoController' }"><a href="/simple-demo">Simple demo</a></li>
+        <li ng-class="{ active: controllerName == 'advanceDemoController' }"><a href="/advance-demo">Advance demo</a></li>
+      </ul>
+      <div ng-view style="margin-top: 10px;">
       </div>
-    </script>
 
-    <script type="text/ng-template" id="phones.html">
-      <div class="container" style="width: 800px; margin-left: inherit;">
+      <!-- Template definitions -->
+      <script type="text/ng-template" id="home.html">
+        <h3 class="text-primary">AngularJS Demo Application</h3>
+        This is a sample Single-page Application built on AngularJS. Let's go around, check out tabs and explore the source code to learn the detail implementation
+      </script>
+
+      <script type="text/ng-template" id="simple-demo.html">
+        <blockquote>
+          The below is a typical Registration form for new account in a forum. It uses following features in AngularJS:
+          <ul>
+            <li>Two-way binding between Model and View</li>
+            <li>Communication between View and Controller</li>
+          </ul>
+        </blockquote>
+        <h3 class="text-primary">Register new account</h3>
+        <form class="form-horizontal" role="form">
+          <div class="form-group" ng-show="accountRegistrationError">
+            <div class="text-danger col-sm-12">
+              Could not create new account, check your input again
+            </div>
+          </div>
+          <div class="form-group" ng-show="accountRegistrationSuccess">
+            <div class="text-success col-sm-12">
+                Successful ! Check Inbox of your new email ...
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inputName" class="col-sm-4 control-label">Name</label>
+            <div class="col-sm-8">
+              <input type="text" id="inputName" ng-model="accountName" class="form-control" placeholder="Enter name" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-4 control-label">New email</label>
+            <div class="col-sm-8">
+              <span ng-bind="accountName" class="text-muted"></span>@kms-technology.com
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-4 control-label">Are you human?</label>
+            <div class="col-sm-8">
+              <span ng-bind="generatedCaptchaText" class="text-success"></span>
+              (<a href="javascript:void(0);" ng-click="generateCaptchaText()">again</a>)<br /><br />
+              <input type="text" ng-model="captchaText" class="form-control" placeholder="Enter the above captcha text" />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-6 col-sm-12">
+              <button type="button" ng-click="registerNewAccount()" class="btn btn-default">Register me</button>
+            </div>
+          </div>
+        </form>
+      </script>
+
+      <script type="text/ng-template" id="advance-demo.html">
+        <blockquote>
+          This page is to show RSS news (use Google Feed API internally). It uses following features in AngularJS:
+          <ul>
+            <li>Custom directives</li>
+            <li>Built-in services injection</li>
+          </ul>
+        </blockquote>
         <form class="form-inline" role="form">
           <div class="form-group">
             <label for="fetchAmountDropdown">Number of items to fetch</label>
@@ -106,8 +109,9 @@
           </div>
           <div class="clearfix"></div>
         </div>
-      </div>
-    </script>
+      </script>
+
+    </div>
 
     <!-- Load scripts -->
     <script src="javascripts/jquery1.10.min.js"         type="text/javascript"></script>
