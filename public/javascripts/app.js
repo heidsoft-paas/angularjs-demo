@@ -121,6 +121,11 @@ google.load("feeds", "1");
         }
       };
     })
+    .filter('toEmailName', function() {
+      return function(input) {
+        return input.replace(/\s+/g, "-");
+      }
+    })
     .config([ "$routeProvider", "$locationProvider", function($routeProvider, $locationProvider) {
       $locationProvider.html5Mode(true);
       $routeProvider
