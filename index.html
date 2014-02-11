@@ -1,79 +1,127 @@
 <!DOCTYPE html>
-<html>
-
+<html ng-app="ada">
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Angularjs : " />
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Angularjs</title>
+    <title>AngularJS demo application</title>
+    <link href="stylesheets/bootstrap3.0.min.css" rel="stylesheet" type="text/css" />
+    <link href="stylesheets/style.css" rel="stylesheet" type="text/css" />
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico"/>
   </head>
-
   <body>
+    <!-- The view -->
+    <div class="container" style="width: 800px; margin: 10px 0;">
+      <ul class="nav nav-tabs" ng-controller="navController">
+        <li ng-class="{ active: controllerName == 'homeController' }"><a href="/">Home</a></li>
+        <li ng-class="{ active: controllerName == 'simpleDemoController' }"><a href="/simple-demo">Simple demo</a></li>
+        <li ng-class="{ active: controllerName == 'advanceDemoController' }"><a href="/advance-demo">Advance demo</a></li>
+      </ul>
+      <div ng-view style="margin-top: 10px;">
+      </div>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/kms-technology/angularjs">View on GitHub</a>
+      <!-- Template definitions -->
+      <script type="text/ng-template" id="home.html">
+        <h3 class="text-primary">AngularJS Demo Application</h3>
+        This is a sample Single-page Application built on AngularJS. Let's go around, check out tabs and explore the source code to learn the detail implementation
+      </script>
 
-          <h1 id="project_title">Angularjs</h1>
-          <h2 id="project_tagline"></h2>
+      <script type="text/ng-template" id="simple-demo.html">
+        <blockquote>
+          The below is a typical Registration form for new account in a forum. It uses following features in AngularJS:
+          <ul>
+            <li>Two-way binding between Model and View</li>
+            <li>Communication between View and Controller</li>
+          </ul>
+        </blockquote>
+        <h3 class="text-primary">Register new account</h3>
+        <form class="form-horizontal" role="form">
+          <div class="form-group" ng-show="accountRegistrationError">
+            <div class="text-danger col-sm-12">
+              Could not create new account, check your input again
+            </div>
+          </div>
+          <div class="form-group" ng-show="accountRegistrationSuccess">
+            <div class="text-success col-sm-12">
+                Successful ! Check Inbox of your new email ...
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inputName" class="col-sm-4 control-label">Name</label>
+            <div class="col-sm-8">
+              <input type="text" id="inputName" ng-model="accountName" class="form-control" placeholder="Enter name" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-4 control-label">New email</label>
+            <div class="col-sm-8">
+              <span ng-bind="accountName" class="text-muted"></span>@kms-technology.com
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-4 control-label">Are you human?</label>
+            <div class="col-sm-8">
+              <span ng-bind="generatedCaptchaText" class="text-success"></span>
+              (<a href="javascript:void(0);" ng-click="generateCaptchaText()">again</a>)<br /><br />
+              <input type="text" ng-model="captchaText" class="form-control" placeholder="Enter the above captcha text" />
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-6 col-sm-12">
+              <button type="button" ng-click="registerNewAccount()" class="btn btn-default">Register me</button>
+            </div>
+          </div>
+        </form>
+      </script>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/kms-technology/angularjs/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/kms-technology/angularjs/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
+      <script type="text/ng-template" id="advance-demo.html">
+        <blockquote>
+          This page will show RSS news (use Google Feed API internally). It uses following features in AngularJS:
+          <ul>
+            <li>Custom directives</li>
+            <li>Custom factory</li>
+            <li>Built-in services injection</li>
+          </ul>
+        </blockquote>
+        <form class="form-inline" role="form">
+          <div class="form-group">
+            <label for="fetchAmountDropdown">Number of items to fetch</label>
+            <select class="form-control" id="fetchAmountDropdown" ng-model="fetchAmount" style="width: 100px;">
+              <option value="5">5</option>
+              <option value="10" ng-selected="fetchAmount == 10">10</option>
+              <option value="20" ng-selected="fetchAmount == 20">20</option>
+            </select>
+          </div>
+          <a void ng-click="getNews()" class="btn btn-default" ng-class="{ 'disabled': onLoading }" role="button">Fetch news</a> 
+          <img src="images/ajax-loading.gif" ng-show="onLoading" /> 
+          <span class="text-success" ng-show="showLoadingSuccessHint">Done !</span>
+        </form>
+        <br />
+        <div ng-show="newsItems.length == 0" class="text-muted">
+          <em>No news item to display</em>
+        </div>
+        <div ng-repeat="item in newsItems" style="padding: 10px 0;">
+          <div class="pull-left">
+            <a ng-href="{{item.link}}" open-new title="{{item.title}}">
+              <img ng-src="{{item.mediaGroups[0].contents[0].thumbnails[0].url}}" style="width: 150px;" />
+            </a>
+          </div>
+          <div class="pull-right" style="width: 600px;">
+            <a ng-href="{{item.link}}" ng-bind="item.title" open-new></a><br />
+            <span ng-bind="item.contentSnippet"></span>  
+            <share url="{{item.link}}" title="{{item.title}}" description="{{item.contentSnippet}}"></share>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      </script>
+
     </div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
-
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
-
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
-
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
-
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
-
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Angularjs maintained by <a href="https://github.com/kms-technology">kms-technology</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
+    <!-- Load scripts -->
+    <script src="javascripts/jquery1.10.min.js"         type="text/javascript"></script>
+    <script src="javascripts/bootstrap3.0.min.js"       type="text/javascript"></script>
+    <script src="javascripts/angular1.2.min.js"         type="text/javascript"></script>
+    <script src="javascripts/angular-route.min.js"      type="text/javascript"></script>
+    <script src="javascripts/angular-cookies.min.js"      type="text/javascript"></script>
+    <script src="javascripts/faker.js"                  type="text/javascript"></script>
+    <script src="https://www.google.com/jsapi"          type="text/javascript"></script>
+    <script src="javascripts/app.js"                    type="text/javascript"></script>
   </body>
 </html>
