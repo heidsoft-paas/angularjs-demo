@@ -33,7 +33,7 @@ google.load("feeds", "1");
 
       $scope.generateCaptchaText();
     })
-    .controller( "advanceDemoController", function($scope, $timeout, $cookies) {
+    .controller( "advanceDemoController", function($scope, $timeout, $cookies, getFeeds) {
       $scope.onLoading = false;
       $scope.showLoadingSuccessHint = false;
       $scope.fetchAmount = parseInt($cookies.fetchAmount || 5, 10);
@@ -43,28 +43,20 @@ google.load("feeds", "1");
         $cookies.fetchAmount = $scope.fetchAmount;
         $scope.onLoading = true;
 
-        var feed = new google.feeds.Feed( "http://feeds.feedburner.com/Mobilecrunch" );
-        feed.setNumEntries( $scope.fetchAmount );
-        feed.setResultFormat( google.feeds.Feed.JSON_FORMAT );
-        feed.load(function(result) {
-          /* This callback changes the model ($scope) but it's executed outside of AngularJS control, so we use $timeout service to tell AngularJS re-bind the template */
-          $timeout(function() {
-            $scope.onLoading = false;
-            if (!result.error) {
-              $scope.newsItems = [];
-              var feedEntries = result.feed.entries; 
-              var maxLength = feedEntries.length;
-              for (var i = 0; i < maxLength; i++) {
-                $scope.newsItems.push(feedEntries[i]);
-              }
+        getFeeds("http://feeds.feedburner.com/Mobilecrunch", $scope.fetchAmount).then(function(result) {
+          $scope.onLoading = false;
+          $scope.newsItems = [];
+          var feedEntries = result.feed.entries; 
+          var maxLength = feedEntries.length;
+          for (var i = 0; i < maxLength; i++) {
+            $scope.newsItems.push(feedEntries[i]);
+          }
 
-              // Notice user that news are loaded success
-              $scope.showLoadingSuccessHint = true;
-              $timeout(function() {
-                $scope.showLoadingSuccessHint = false;
-              }, 2000);
-            }
-          }); 
+          // Notice user that news are loaded success
+          $scope.showLoadingSuccessHint = true;
+          $timeout(function() {
+            $scope.showLoadingSuccessHint = false;
+          }, 2000);
         });
       };
     });
@@ -106,6 +98,19 @@ google.load("feeds", "1");
         }
       };
     })
+    .factory("getFeeds", [ "$q", function($q) {
+      return function(url, numEntries) {
+        var feed = new google.feeds.Feed( url );
+        var deferred = $q.defer();
+        feed.setNumEntries( numEntries );
+        feed.setResultFormat( google.feeds.Feed.JSON_FORMAT );
+        feed.load( function(result) {
+          if( result.error ) deferred.reject(result.error);
+          else deferred.resolve(result);
+        });
+        return deferred.promise;
+      }
+    }])
     .config([ "$routeProvider", "$locationProvider", function($routeProvider, $locationProvider) {
       $locationProvider.html5Mode(true);
       $routeProvider
