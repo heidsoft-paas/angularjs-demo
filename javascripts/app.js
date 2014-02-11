@@ -33,17 +33,17 @@ google.load("feeds", "1");
 
       $scope.generateCaptchaText();
     })
-    .controller( "advanceDemoController", function($scope, $timeout, $cookies, getFeeds) {
+    .controller( "advanceDemoController", function($scope, $timeout, storage /* inject our service */, getFeeds /* inject our factory */) {
       $scope.onLoading = false;
       $scope.showLoadingSuccessHint = false;
-      $scope.fetchAmount = parseInt($cookies.fetchAmount || 5, 10);
+      $scope.fetchAmount = storage.fetchAmount();
       $scope.newsItems = [];      
 
       $scope.getNews = function() {
-        $cookies.fetchAmount = $scope.fetchAmount;
+        storage.fetchAmount($scope.fetchAmount);
         $scope.onLoading = true;
 
-        getFeeds("http://feeds.feedburner.com/Mobilecrunch", $scope.fetchAmount).then(function(result) {
+        getFeeds($scope.fetchAmount).then(function(result) {
           $scope.onLoading = false;
           $scope.newsItems = [];
           var feedEntries = result.feed.entries; 
@@ -65,6 +65,29 @@ google.load("feeds", "1");
         "ngRoute" /* enable routing */, 
         "ngCookies" /* access to browser cookie */,
         "adaControllers" ])
+    .value("feedUrl", "http://feeds.feedburner.com/Mobilecrunch")
+    .factory("getFeeds", [ "$q", "feedUrl", function($q, feedUrl) {
+      return function(numEntries) {
+        var feed = new google.feeds.Feed( feedUrl );
+        var deferred = $q.defer();
+        feed.setNumEntries( numEntries );
+        feed.setResultFormat( google.feeds.Feed.JSON_FORMAT );
+        feed.load( function(result) {
+          if( result.error ) deferred.reject(result.error);
+          else deferred.resolve(result);
+        });
+        return deferred.promise;
+      }
+    }])
+    .service("storage", [ "$cookies", function($cookies) {
+      this.fetchAmount = function(val) {
+        if(val == undefined) {
+          return parseInt($cookies.fetchAmount || 5, 10);
+        }
+
+        $cookies.fetchAmount = val;
+      };
+    }])
     .directive("void", function() {
       return {
         restrict  : "A",
@@ -98,19 +121,11 @@ google.load("feeds", "1");
         }
       };
     })
-    .factory("getFeeds", [ "$q", function($q) {
-      return function(url, numEntries) {
-        var feed = new google.feeds.Feed( url );
-        var deferred = $q.defer();
-        feed.setNumEntries( numEntries );
-        feed.setResultFormat( google.feeds.Feed.JSON_FORMAT );
-        feed.load( function(result) {
-          if( result.error ) deferred.reject(result.error);
-          else deferred.resolve(result);
-        });
-        return deferred.promise;
+    .filter('toEmailName', function() {
+      return function(input) {
+        return input.replace(/\s+/g, "-");
       }
-    }])
+    })
     .config([ "$routeProvider", "$locationProvider", function($routeProvider, $locationProvider) {
       $locationProvider.html5Mode(true);
       $routeProvider
