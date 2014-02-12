@@ -105,8 +105,8 @@
           </div>
           <div class="pull-right" style="width: 600px;">
             <a ng-href="{{item.link}}" ng-bind="item.title" open-new></a><br />
-            <span ng-bind="item.contentSnippet"></span>  
-            <share url="{{item.link}}" title="{{item.title}}" description="{{item.contentSnippet}}"></share>
+            <span ng-bind="item.contentSnippet"></span><br /><br />
+            <share url="{{item.link}}" article-title="{{item.title}}" description="{{item.contentSnippet}}"></share>
           </div>
           <div class="clearfix"></div>
         </div>

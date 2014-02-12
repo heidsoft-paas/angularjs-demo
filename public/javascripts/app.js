@@ -109,15 +109,25 @@ google.load("feeds", "1");
         restrict        : "E",
         template        : 
           "<div>" +
-            "<a open-new ng-href=\"http://www.facebook.com/sharer.php?u={{url}}\" title=\"Share on Facebook\"><span class=\"glyphicon glyphicon-thumbs-up\"></span></a>" +
-            "&nbsp;<a open-new title=\"Share on LinkedIn\" ng-href=\"http://www.linkedin.com/shareArticle?mini=true&url={{url}}&title={{title}}&summary={{description}}\"><span class=\"glyphicon glyphicon-user\"></span></a>" +
-            "&nbsp;<a open-new title=\"Share on Google Plus\" ng-href=\"https://plus.google.com/share?url={{url}}\"><span class=\"glyphicon glyphicon-plus\"></span></a>" +
+            "<span data-id=\"shareCount\" class=\"text-success\"><strong><span ng-bind=\"totalShare\"></span></strong> shares / </span>" +
+            "<a open-new ng-href=\"http://www.facebook.com/sharer.php?u={{url}}\" title=\"Share on Facebook\"><span class=\"glyphicon glyphicon-thumbs-up\" ng-click=\"onSharing()\"></span></a>" +
+            "&nbsp;&nbsp;<a open-new title=\"Share on LinkedIn\" ng-href=\"http://www.linkedin.com/shareArticle?mini=true&url={{url}}&title={{title}}&summary={{description}}\" ng-click=\"onSharing()\"><span class=\"glyphicon glyphicon-user\"></span></a>" +
+            "&nbsp;&nbsp;<a open-new title=\"Share on Google Plus\" ng-href=\"https://plus.google.com/share?url={{url}}\" ng-click=\"onSharing()\"><span class=\"glyphicon glyphicon-plus\"></span></a>" +
           "</div>",
         replace         : true,
         scope           : {
           url           : "@",
-          title         : "@",
+          title         : "@articleTitle",
           description   : "@"
+        },
+        link: function(scope, element) {
+          scope.totalShare = 0;
+          scope.onSharing = function() { 
+            ++scope.totalShare;
+            element.find('[data-id="shareCount"]').tooltip("destroy").tooltip({
+              title: "Shared on " + (new Date()).toTimeString()
+            });
+          };
         }
       };
     })
