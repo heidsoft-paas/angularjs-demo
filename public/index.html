@@ -10,9 +10,9 @@
     <!-- The view -->
     <div class="container" style="width: 800px; margin: 10px 0;">
       <ul class="nav nav-tabs" ng-controller="navController">
-        <li ng-class="{ active: controllerName == 'homeController' }"><a href="/">Home</a></li>
-        <li ng-class="{ active: controllerName == 'simpleDemoController' }"><a href="/simple-demo">Simple demo</a></li>
-        <li ng-class="{ active: controllerName == 'advanceDemoController' }"><a href="/advance-demo">Advance demo</a></li>
+        <li ng-class="{ active: controllerName == 'homeController' }"><a ng-href="{{rootPath}}/">Home</a></li>
+        <li ng-class="{ active: controllerName == 'simpleDemoController' }"><a ng-href="{{rootPath}}/simple-demo">Simple demo</a></li>
+        <li ng-class="{ active: controllerName == 'advanceDemoController' }"><a ng-href="{{rootPath}}/advance-demo">Advance demo</a></li>
       </ul>
       <div ng-view style="margin-top: 10px;">
       </div>

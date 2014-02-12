@@ -4,8 +4,9 @@ google.load("feeds", "1");
   angular
     .module( "adaControllers", [])
     .controller( "homeController", function() {})
-    .controller( "navController", function($scope) {
+    .controller( "navController", function($scope, app) {
       $scope.controllerName = "homeController";
+      $scope.rootPath = app.rootPath;
       $scope.$on("$routeChangeSuccess", function(ev, current) {   
         $scope.controllerName = current.controller;
       });  
@@ -66,6 +67,7 @@ google.load("feeds", "1");
         "ngCookies" /* access to browser cookie */,
         "adaControllers" ])
     .value("feedUrl", "http://feeds.feedburner.com/Mobilecrunch")
+    .constant("app", { rootPath: location.pathname.replace(/\/$/,"") }) /* Use Constant recipe since we need it available at config phase */
     .factory("getFeeds", [ "$q", "feedUrl", function($q, feedUrl) {
       return function(numEntries) {
         var feed = new google.feeds.Feed( feedUrl );
@@ -136,19 +138,18 @@ google.load("feeds", "1");
         return (input || "").replace(/\s+/g, "-");
       }
     })
-    .config([ "$routeProvider", "$locationProvider", function($routeProvider, $locationProvider) {
+    .config([ "$routeProvider", "$locationProvider", "app", function($routeProvider, $locationProvider, app) {
       $locationProvider.html5Mode(true);
-      var webRootPath = location.pathname.replace(/\/$/,"");
       $routeProvider
-        .when( webRootPath + "/", { 
+        .when( app.rootPath + "/", { 
           templateUrl: "home.html",
           controller: "homeController"
         })
-        .when( webRootPath + "/simple-demo", { 
+        .when( app.rootPath + "/simple-demo", { 
           templateUrl: "simple-demo.html",
           controller: "simpleDemoController"
         })
-        .when( webRootPath + "/advance-demo", { 
+        .when( app.rootPath + "/advance-demo", { 
           templateUrl: "advance-demo.html",
           controller: "advanceDemoController"
         });
