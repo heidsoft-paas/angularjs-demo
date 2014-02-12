@@ -133,21 +133,22 @@ google.load("feeds", "1");
     })
     .filter('toEmailName', function() {
       return function(input) {
-        return input.replace(/\s+/g, "-");
+        return (input || "").replace(/\s+/g, "-");
       }
     })
     .config([ "$routeProvider", "$locationProvider", function($routeProvider, $locationProvider) {
       $locationProvider.html5Mode(true);
+      var webRootPath = location.pathname.replace(/\/$/,"");
       $routeProvider
-        .when( "/", { 
+        .when( webRootPath + "/", { 
           templateUrl: "home.html",
           controller: "homeController"
         })
-        .when( "/simple-demo", { 
+        .when( webRootPath + "/simple-demo", { 
           templateUrl: "simple-demo.html",
           controller: "simpleDemoController"
         })
-        .when( "/advance-demo", { 
+        .when( webRootPath + "/advance-demo", { 
           templateUrl: "advance-demo.html",
           controller: "advanceDemoController"
         });
