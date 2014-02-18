@@ -1,6 +1,5 @@
 google.load("feeds", "1");
 (function() {
-  /* On jQuery "ready" event of document */
   angular
     .module( "adaControllers", [])
     .controller( "homeController", function() {})
