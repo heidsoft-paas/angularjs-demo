@@ -3,7 +3,7 @@ Demo application for AngularJS seminar
 
 Check out the live demo at http://kms-technology.github.io/angularjs
 
-This is the source code of demo application for AngularJS seminar held by [KMS Technology](http://kms-technology.com). The presentation slide can be [downloaded from here](http://www.slideshare.net/kmstechnology). The demo app uses following libraries:
+This is the source code of demo application for AngularJS seminar held by [KMS Technology](http://kms-technology.com). The presentation slide can be [downloaded from here](http://www.slideshare.net/kmstechnology/building-singlepage-web-applications-with-angularjs). The demo app uses following libraries:
 
 - [AngularJS](http://angularjs.org/) (of course)
 - [Twitter Bootstrap](http://getbootstrap.com/) to make life easier :)
